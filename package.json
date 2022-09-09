@@ -12,8 +12,7 @@
         "react-dom": "^18.2.0",
         "react-scripts": "5.0.1",
         "web-vitals": "^2.1.0",
-        "web3": "^1.7.5",
-        "nodemon": "^2.0.19"
+        "web3": "^1.7.5"
     },
     "engines": {
         "node": "16.x"
@@ -56,6 +55,7 @@
         "stream-browserify": "^3.0.0",
         "stream-http": "^3.2.0",
         "url": "^0.11.0",
-        "webpack": "^5.74.0"
+        "webpack": "^5.74.0",
+        "nodemon": "^2.0.19"
     }
 }
