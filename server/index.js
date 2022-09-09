@@ -29,7 +29,7 @@ app.use(myLogger);
 app.use(express.static(__dirname + './../build'));
 
 app.get('/', function (req, res, next) {
-    res.sendFile(path.join(__dirname + '/index.html'));
+    res.sendFile(path.join('/index.html'));
 });
 
 app.post('/validatescore', function (req, res, next) {
