@@ -9,9 +9,13 @@ import HighScore from './components/HighScore';
 import Instructions from './components/Instructions';
 import Info from './components/Info';
 import Description from './components/Description';
+import { ABI } from './contracts/Pacman';
 
 const injected = new InjectedConnector();
 const web3 = new Web3(Web3.givenProvider || 'https://ropsten.infura.io/v3/a07cd96ad0bb435f9e750c8faa672052');
+const dappUri = 'pacman-web3.herokuapp.com';
+const CA = '0x297E7a4d49b97D2D9121810214b916a551E34B09';
+const PacmanContract = new web3.eth.Contract(ABI, CA);
 
 function App() {
     const [init, setInit] = useState(false);
@@ -110,7 +114,6 @@ function App() {
         } catch (err) {
             console.error(err.message);
             if (err.message.includes('No Ethereum provider was found')) {
-                const dappUri = 'pacman-web3.herokuapp.com';
                 window.open(`https://metamask.app.link/dapp/${dappUri}`);
             }
         }
@@ -147,23 +150,43 @@ function App() {
     };
 
     const getHighscore = async () => {
+        let getScoreList = [];
         if (active) {
+            getScoreList = await PacmanContract.methods.getAllScore().call();
+            if (Array.isArray(getScoreList) && getScoreList.length > 0) {
+                getScoreList = getScoreList.map((item) => {
+                    return {
+                        account: item['scoreAddress'],
+                        score: item['scoreCount'],
+                        name: item['scoreName'],
+                    };
+                });
+            }
         } else {
-            let getScoreList = localStorage.getItem('pacman_highscore');
+            getScoreList = localStorage.getItem('pacman_highscore');
             if (getScoreList === null) {
                 getScoreList = [];
             } else {
                 getScoreList = JSON.parse(getScoreList);
             }
-            getScoreList = getScoreList.sort((a, b) => {
-                return b.score - a.score;
-            });
-            setHighScoreList(getScoreList);
         }
+        getScoreList = getScoreList.sort((a, b) => {
+            return b.score - a.score;
+        });
+        setHighScoreList(getScoreList);
     };
 
     const addHighscore = async () => {
         if (active) {
+            setSubmitLoading(true);
+            try {
+                await PacmanContract.methods
+                    .addScore(playerName, score)
+                    .send({ from: account, value: Web3.utils.toWei('0.01', 'ether') });
+            } catch (error) {
+                console.log('add score failed: ', error);
+            }
+            setSubmitLoading(false);
         } else {
             let getScoreList = localStorage.getItem('pacman_highscore');
             if (getScoreList === null) {

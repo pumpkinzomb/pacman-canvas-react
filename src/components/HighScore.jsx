@@ -1,3 +1,5 @@
+import React from 'react';
+
 const HighScore = (props) => {
     const { onBackGameContents, highScoreList } = props;
     return (
@@ -13,12 +15,15 @@ const HighScore = (props) => {
                             return (
                                 <li key={index}>
                                     {item.account && (
-                                        <a
-                                            href={`https://ropsten.etherscan.io/address/${item.account}`}
-                                            target="_blank"
-                                        >
-                                            {item.account?.slice(0, 6)}...{item.account?.slice(-6)}
-                                        </a>
+                                        <React.Fragment>
+                                            <a
+                                                href={`https://ropsten.etherscan.io/address/${item.account}`}
+                                                target="_blank"
+                                            >
+                                                {item.account?.slice(0, 6)}...{item.account?.slice(-6)}
+                                            </a>
+                                            &nbsp;
+                                        </React.Fragment>
                                     )}
                                     {item.name}
                                     <span id="score">{item.score}</span>
