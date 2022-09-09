@@ -26,7 +26,6 @@ const FINAL_LEVEL = 10;
 const PILL_POINTS = 10;
 const POWERPILL_POINTS = 50;
 const GHOST_POINTS = 100;
-const HIGHSCORE_ENABLED = true;
 
 export function geronimo({
     canvas,
@@ -42,59 +41,6 @@ export function geronimo({
     var canvas_walls, context_walls;
     var inky, blinky, clyde, pinky;
     var mapConfig = 'data/map.json';
-
-    /* AJAX stuff */
-    var getHighscore = () => {
-        setTimeout(ajax_get, 30);
-    };
-    var ajax_get = async () => {
-        var date = new Date().getTime();
-        const response = await axios.get('data/db-handler.php', { timestamp: date, action: 'get' });
-        // $.ajax({
-        //     datatype: 'json',
-        //     type: 'GET',
-        //     url: 'data/db-handler.php',
-        //     data: {
-        //         timestamp: date,
-        //         action: 'get',
-        //     },
-        //     success: function (msg) {
-        //         $('#highscore-list').text('');
-        //         for (var i = 0; i < msg.length; i++) {
-        //             $('#highscore-list').append(
-        //                 '<li>' + msg[i]['name'] + "<span id='score'>" + msg[i]['score'] + '</span></li>',
-        //             );
-        //         }
-        //     },
-        // });
-    };
-    var ajax_add = async (n, s, l) => {
-        const response = await axios.get('data/db-handler.php', { action: 'add', name: n, score: s, level: l });
-        // $.ajax({
-        //     type: 'POST',
-        //     url: 'data/db-handler.php',
-        //     data: {
-        //         action: 'add',
-        //         name: n,
-        //         score: s,
-        //         level: l,
-        //     },
-        //     dataType: 'json',
-        //     success: function (data) {
-        //         console.log('Highscore added: ' + data);
-        //         $('#highscore-form').html('<span class="button" id="show-highscore">View Highscore List</span>');
-        //     },
-        //     error: function (errorThrown) {
-        //         console.log(errorThrown);
-        //     },
-        // });
-    };
-
-    function addHighscore() {
-        // var name = $('input[type=text]').val();
-        // $('#highscore-form').html('Saving highscore...');
-        ajax_add('', game.score.score, game.level);
-    }
 
     function buildWall(context, gridX, gridY, width, height) {
         console.log('BuildWall');
