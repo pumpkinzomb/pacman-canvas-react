@@ -1,12 +1,17 @@
 import './App.css';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { useMetaMask } from 'metamask-react';
+import { useWeb3React } from '@web3-react/core';
+import { InjectedConnector } from '@web3-react/injected-connector';
+import Web3 from 'web3';
 import { geronimo } from './utils/pacman-canvas';
 import HighScore from './components/HighScore';
 import Instructions from './components/Instructions';
 import Info from './components/Info';
 import Description from './components/Description';
+
+const injected = new InjectedConnector();
+const web3 = new Web3(Web3.givenProvider || 'https://ropsten.infura.io/v3/a07cd96ad0bb435f9e750c8faa672052');
 
 function App() {
     const [init, setInit] = useState(false);
@@ -32,7 +37,8 @@ function App() {
     const [submitValidation, setSubmitValidation] = useState(null);
     const [submitLoading, setSubmitLoading] = useState(false);
     const canvasRef = useRef();
-    const { status, connect, account, chainId, ethereum, switchChain } = useMetaMask();
+    const { connector, library, chainId, account, active, error, activate } = useWeb3React();
+
     useEffect(() => {
         return () => {
             window.removeEventListener('keydown', doKeyDown);
@@ -40,10 +46,16 @@ function App() {
     }, []);
 
     useEffect(() => {
-        if (chainId && chainId !== '0x3') {
-            switchChain('0x3');
+        if (chainId && chainId !== 3) {
+            changeToRopstenChain();
         }
     }, [chainId]);
+
+    useEffect(() => {
+        if (account) {
+            getBalance();
+        }
+    }, [account]);
 
     useEffect(() => {
         if (canvasRef.current && pacmanControl === null) {
@@ -72,15 +84,35 @@ function App() {
             if (process.env.NODE_ENV === 'production') {
                 pacmanControl.logger.disableLogger();
             }
-            // connectWallet();
+            handleConnectWallet();
         }
     }, [pacmanControl]);
 
+    const changeToRopstenChain = async () => {
+        await web3.currentProvider.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x3' }],
+        });
+    };
+
+    const getBalance = async () => {
+        const balance = await web3.eth.getBalance(account);
+        console.log('account balance: ', balance);
+    };
+
     const handleConnectWallet = async () => {
         try {
-            await connect();
+            await activate(injected, (error) => {
+                // 크롬 익스텐션 없을 경우 오류 핸들링
+                console.log('wallet error:', error);
+                throw error;
+            });
         } catch (err) {
             console.error(err.message);
+            if (err.message.includes('No Ethereum provider was found')) {
+                const dappUri = 'pacman-web3.herokuapp.com';
+                window.open(`https://metamask.app.link/dapp/${dappUri}`);
+            }
         }
     };
 
@@ -115,7 +147,7 @@ function App() {
     };
 
     const getHighscore = async () => {
-        if (status === 'connected') {
+        if (active) {
         } else {
             let getScoreList = localStorage.getItem('pacman_highscore');
             if (getScoreList === null) {
@@ -131,7 +163,7 @@ function App() {
     };
 
     const addHighscore = async () => {
-        if (status === 'connected') {
+        if (active) {
         } else {
             let getScoreList = localStorage.getItem('pacman_highscore');
             if (getScoreList === null) {
@@ -271,20 +303,18 @@ function App() {
                 {showInstructions && <Instructions onBackGameContents={handleBackGameContents} />}
                 {showInfo && <Info onBackGameContents={handleBackGameContents} />}
                 <div className={`content ${showGameContents ? 'show' : ''}`} id="game-content">
-                    {status !== 'unavailable' && (
-                        <div className="account-section">
-                            {status === 'connected' ? (
-                                <span>
-                                    Account:&nbsp;
-                                    {account?.substr(0, 6)}...{account?.substr(-6)}
-                                </span>
-                            ) : (
-                                <span className="button" id="connect-wallet" onClick={handleConnectWallet}>
-                                    wallet
-                                </span>
-                            )}
-                        </div>
-                    )}
+                    <div className="account-section">
+                        {active ? (
+                            <span>
+                                Account:&nbsp;
+                                {account?.slice(0, 6)}...{account?.slice(-6)}
+                            </span>
+                        ) : (
+                            <span className="button" id="connect-wallet" onClick={handleConnectWallet}>
+                                wallet
+                            </span>
+                        )}
+                    </div>
 
                     <div className="game wrapper">
                         <div className="score">{`Score: ${score}`}&nbsp;</div>
