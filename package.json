@@ -19,7 +19,7 @@
     },
     "scripts": {
         "server": "nodemon server",
-        "start": "node server",
+        "start": "yarn build && node server",
         "start:dev": "craco start",
         "build": "craco build",
         "test": "craco test",
