@@ -7,6 +7,9 @@ import Instructions from './components/Instructions';
 import Info from './components/Info';
 import Description from './components/Description';
 
+const Web3 = require('web3');
+const web3 = new Web3(Web3.givenProvider || 'https://ropsten.infura.io/v3/a07cd96ad0bb435f9e750c8faa672052');
+
 function App() {
     const [init, setInit] = useState(false);
     const [pacmanControl, setPacmanControl] = useState(null);
