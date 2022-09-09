@@ -1,0 +1,316 @@
+/**********************************************************************************
+
+       .__          __         .__    ____                     .__     
+______ |  | _____ _/  |________|  |__/_   |______  ______ ____ |  |__  
+\____ \|  | \__  \\   __\___   /  |  \|   \_  __ \/  ___// ___\|  |  \ 
+|  |_> >  |__/ __ \|  |  /    /|   Y  \   ||  | \/\___ \\  \___|   Y  \
+|   __/|____(____  /__| /_____ \___|  /___||__|  /____  >\___  >___|  / .ch
+|__|             \/           \/    \/                \/     \/  
+
+**********************************************************************************/
+
+a img {
+    border: none;
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'Press Start 2P', cursive;
+    font-family: 'Codystar', cursive;
+    font-family: 'Acme', sans-serif;
+    text-transform: uppercase;
+}
+h1 {
+    font-size: 2em;
+}
+h2 {
+    font-size: 1.7em;
+}
+h3 {
+    font-size: 1.5em;
+}
+
+html,
+body {
+    width: 100%;
+    font-family: 'Quando', serif;
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    height: 100%;
+    line-height: 23px;
+    background: url('./../images/bg-pattern-black.png') repeat;
+    text-align: center;
+}
+body {
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+div.layout {
+    margin: 0;
+    padding: 0;
+}
+
+aside {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+aside > * {
+    margin: 0 15px;
+    padding: 15px 0;
+}
+
+.wrapper {
+    width: 100%;
+}
+.mobile {
+    display: none;
+}
+
+::selection {
+    background: 'rgba(24, 106, 12, 0.7)'; /* Safari */
+}
+
+::-moz-selection {
+    background: 'rgba(24, 106, 12, 0.7)'; /* Firefox */
+}
+
+.main {
+    display: inline-block;
+    position: static;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.header {
+    display: none;
+}
+
+.header,
+.content,
+.footer {
+    margin: 30px;
+    max-width: 700px;
+    background: rgba(0, 0, 0, 0.4);
+    color: rgba(255, 255, 255, 0.9);
+    padding: 4em;
+    width: 700px;
+    -webkit-box-shadow: 2px 2px 5px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow: 2px 2px 5px rgba(50, 50, 50, 0.75);
+    box-shadow: 2px 2px 5px rgba(50, 50, 50, 0.75);
+}
+
+.main a,
+.main a:link,
+.main a:active,
+.main a:visited {
+    color: #367e20;
+    text-decoration: none;
+}
+.main a:hover,
+.main a:focus {
+    text-decoration: underline;
+    color: #367e20;
+}
+
+.content {
+    min-height: 400px;
+}
+
+.logo {
+    width: 220px;
+    display: block;
+    margin: 30px auto 10px auto;
+}
+
+input,
+select,
+textarea {
+    padding: 0.4em;
+    margin: 0.4em;
+}
+
+input[type='button'],
+input[type='submit'] {
+    background: #326a21;
+    text-transform: uppercase;
+    border-radius: 15px;
+    color: #fff;
+    border: none;
+}
+input[type='text'],
+input[type='password'],
+textarea {
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3) inset;
+}
+input[type='button']:hover,
+input[type='button']:focus,
+input[type='submit']:hover,
+input[type='submit']:focus {
+    background: #367e20;
+    cursor: pointer;
+}
+
+input[type='text']:hover,
+input[type='text']:focus,
+input[type='password']:hover,
+input[type='password']:focus,
+textarea:hover,
+textarea:focus {
+    border: 1px solid #009600;
+}
+
+/*---------------------------------------------------------------------
+
+	Swipe.js - Javascript Slider
+	
+*/
+
+.swipe {
+    margin: 1em 0;
+}
+.swipe ul {
+    padding: 0;
+}
+.swipe li div {
+    padding: 1em;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+}
+
+/* Mobile CSS - Medium (Tablets, small Screens) */
+
+@media screen and (max-width: 1050px) {
+    .main {
+        background: rgba(0, 0, 0, 0.4);
+        background-attachment: fixed;
+    }
+    .header,
+    .content,
+    .footer {
+        margin: 0;
+        max-width: none;
+        width: auto;
+        height: 100%;
+        background: none;
+    }
+}
+
+/* Mobile CSS - Small (Smartphones) */
+@media screen and (max-width: 650px) {
+    html,
+    body {
+        height: auto;
+    }
+
+    .main {
+        background: none;
+    }
+    body {
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .mobile {
+        display: block;
+    }
+    .nomobile {
+        display: none !important;
+    }
+    .logo {
+        height: 90px;
+        width: auto;
+        margin: 5px auto 5px auto;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .header,
+    .content,
+    .footer {
+        margin: 0;
+        max-width: 650px;
+        padding: 5px 0;
+    }
+
+    .main {
+        position: relative;
+        left: 0;
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .header > *,
+    .content > *,
+    .footer > * {
+        margin: 5px 10px;
+    }
+    .footer {
+        position: relative;
+        margin-bottom: 0;
+        height: 40px;
+    }
+
+    ul.nav {
+        margin: 0;
+        text-align: center;
+    }
+
+    ul.nav.sub {
+        margin: 0 auto;
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+    ul.nav li,
+    ul.nav.sub li {
+        padding: 0 0.5em;
+        margin: 0;
+        display: inline-block;
+        background: none;
+    }
+    ul.nav li:hover,
+    ul.nav.sub li:hover {
+        padding: 0 0.5em;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    ul.nav.sub li {
+        display: block;
+    }
+    .box2,
+    .box3 {
+        display: block;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    ul.nav li {
+        margin: 0;
+        padding: 0 0.3em;
+    }
+    ul.nav li:hover,
+    ul.nav.sub li:hover {
+        padding: 0 0.3em;
+    }
+}
+
+#adsense {
+    text-align: center;
+    display: block;
+}
+
+#adsense .adsbygoogle {
+    margin-left: auto;
+    margin-right: auto;
+}
