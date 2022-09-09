@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const bodyParser = require('body-parser');
-
+const PORT = process.env.PORT || 8080;
 const PILL_POINTS = 10;
 const POWERPILL_POINTS = 50;
 const GHOST_POINTS = 100;
@@ -40,5 +40,4 @@ app.post('/validatescore', function (req, res, next) {
     });
 });
 
-var PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log('Server started at http://localhost:' + PORT));
+app.listen(PORT, () => console.log('Server started at port:' + PORT));
