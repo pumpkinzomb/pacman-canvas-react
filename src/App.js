@@ -1,14 +1,17 @@
 import './App.css';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
+import { useWeb3React } from '@web3-react/core';
+import { InjectedConnector } from '@web3-react/injected-connector';
 import { geronimo } from './utils/pacman-canvas';
 import HighScore from './components/HighScore';
 import Instructions from './components/Instructions';
 import Info from './components/Info';
 import Description from './components/Description';
 
-const Web3 = require('web3');
-const web3 = new Web3(Web3.givenProvider || 'https://ropsten.infura.io/v3/a07cd96ad0bb435f9e750c8faa672052');
+const injected = new InjectedConnector();
+// const Web3 = require('web3');
+// const web3 = new Web3(Web3.givenProvider || 'https://ropsten.infura.io/v3/a07cd96ad0bb435f9e750c8faa672052');
 
 function App() {
     const [init, setInit] = useState(false);
@@ -33,8 +36,8 @@ function App() {
     });
     const [submitValidation, setSubmitValidation] = useState(null);
     const [submitLoading, setSubmitLoading] = useState(false);
-
     const canvasRef = useRef();
+    const { connector, library, chainId, account, active, error, activate, deactivate } = useWeb3React();
     useEffect(() => {
         return () => {
             window.removeEventListener('keydown', doKeyDown);
@@ -53,6 +56,7 @@ function App() {
                 setHeartCount,
                 setLevel,
                 setScore,
+                setSubmitValidation,
             });
             setPacmanControl(controller);
         }
@@ -67,8 +71,24 @@ function App() {
             if (process.env.NODE_ENV === 'production') {
                 pacmanControl.logger.disableLogger();
             }
+            // connectWallet();
         }
     }, [pacmanControl]);
+
+    const handleConnectWallet = async () => {
+        try {
+            await activate(injected, (error) => {
+                // 크롬 익스텐션 없을 경우 오류 핸들링
+                console.log('wallet error:', error);
+                throw error;
+            });
+        } catch (err) {
+            console.error(err.message);
+            if (err.code === -32603) {
+                window.open('https://metamask.io/download.html');
+            }
+        }
+    };
 
     const handleChangeCanvasContainer = (params) => {
         setCanvasContainer({
@@ -100,12 +120,40 @@ function App() {
         }
     };
 
-    const getHighscore = async () => {};
+    const getHighscore = async () => {
+        if (active) {
+        } else {
+            let getScoreList = localStorage.getItem('pacman_highscore');
+            if (getScoreList === null) {
+                getScoreList = [];
+            } else {
+                getScoreList = JSON.parse(getScoreList);
+            }
+            getScoreList = getScoreList.sort((a, b) => {
+                return b.score - a.score;
+            });
+            setHighScoreList(getScoreList);
+        }
+    };
 
     const addHighscore = async () => {
-        setSubmitLoading(true);
-
-        setSubmitLoading(false);
+        if (active) {
+        } else {
+            let getScoreList = localStorage.getItem('pacman_highscore');
+            if (getScoreList === null) {
+                getScoreList = [];
+            } else {
+                getScoreList = JSON.parse(getScoreList);
+            }
+            setSubmitLoading(true);
+            getScoreList = getScoreList.concat({
+                name: playerName,
+                score,
+            });
+            setHighScoreList(getScoreList);
+            localStorage.setItem('pacman_highscore', JSON.stringify(getScoreList));
+            setSubmitLoading(false);
+        }
     };
 
     // Mobile Control Buttons
@@ -174,40 +222,45 @@ function App() {
             case 38: // UP Arrow Key pressed
                 evt.preventDefault();
             case 87: // W pressed
-                pacmanControl.pacman.directionWatcher.set(pacmanControl.up);
+                if (!(pacmanControl.game.gameOver === true)) {
+                    pacmanControl.pacman.directionWatcher.set(pacmanControl.up);
+                }
                 break;
             case 40: // DOWN Arrow Key pressed
                 evt.preventDefault();
             case 83: // S pressed
-                pacmanControl.pacman.directionWatcher.set(pacmanControl.down);
+                if (!(pacmanControl.game.gameOver === true)) {
+                    pacmanControl.pacman.directionWatcher.set(pacmanControl.down);
+                }
                 break;
             case 37: // LEFT Arrow Key pressed
-                evt.preventDefault();
             case 65: // A pressed
-                pacmanControl.pacman.directionWatcher.set(pacmanControl.left);
+                if (!(pacmanControl.game.gameOver === true)) {
+                    pacmanControl.pacman.directionWatcher.set(pacmanControl.left);
+                }
                 break;
             case 39: // RIGHT Arrow Key pressed
-                evt.preventDefault();
             case 68: // D pressed
                 pacmanControl.pacman.directionWatcher.set(pacmanControl.right);
                 break;
             case 78: // N pressed
-                pacmanControl.game.pause = 1;
-                pacmanControl.game.newGame();
+                if (!(pacmanControl.game.gameOver === true)) {
+                    pacmanControl.game.pause = 1;
+                    pacmanControl.game.newGame();
+                }
                 break;
             case 77: // M pressed
-                evt.preventDefault();
-                handleClickSound();
+                if (!(pacmanControl.game.gameOver === true)) {
+                    handleClickSound();
+                }
                 break;
             case 8: // Backspace pressed -> show Game Content
                 handleBackGameContents();
                 break;
             case 27: // ESC pressed -> show Game Content
-                evt.preventDefault();
                 handleBackGameContents();
                 break;
             case 32: // SPACE pressed -> pause Game
-                evt.preventDefault();
                 if (!(pacmanControl.game.gameOver === true)) {
                     pacmanControl.game.pauseResume();
                 }
@@ -224,6 +277,18 @@ function App() {
                 {showInstructions && <Instructions onBackGameContents={handleBackGameContents} />}
                 {showInfo && <Info onBackGameContents={handleBackGameContents} />}
                 <div className={`content ${showGameContents ? 'show' : ''}`} id="game-content">
+                    <div className="account-section">
+                        {active ? (
+                            <span>
+                                Account:&nbsp;
+                                {account?.substr(0, 6)}...{account?.substr(-6)}
+                            </span>
+                        ) : (
+                            <span className="button" id="connect-wallet" onClick={handleConnectWallet}>
+                                wallet
+                            </span>
+                        )}
+                    </div>
                     <div className="game wrapper">
                         <div className="score">{`Score: ${score}`}&nbsp;</div>
                         <div className="level">{`Lvl: ${level}`}&nbsp;</div>
@@ -238,10 +303,10 @@ function App() {
                                 );
                             })}
                         </div>
-
                         <div className={`controlSound ${soundOn ? 'on' : ''}`} onClick={handleClickSound}>
                             <img src="images/audio-icon-mute.png" id="mute" />
                         </div>
+
                         <div id="canvas-container" onClick={handlePauseToggle}>
                             {canvasContainer.show && (
                                 <div id="canvas-overlay-container">
@@ -257,15 +322,15 @@ function App() {
                                                     <div id="highscore-form">
                                                         {submitValidation === true ? (
                                                             submitLoading ? (
+                                                                'Saving highscore...'
+                                                            ) : (
                                                                 <span
-                                                                    class="button"
+                                                                    className="button"
                                                                     id="show-highscore"
                                                                     onClick={handleClickHighScore}
                                                                 >
                                                                     View Highscore List
                                                                 </span>
-                                                            ) : (
-                                                                'Saving highscore...'
                                                             )
                                                         ) : (
                                                             <React.Fragment>

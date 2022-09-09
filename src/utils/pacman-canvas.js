@@ -35,6 +35,7 @@ export function geronimo({
     setHeartCount,
     setLevel,
     setScore,
+    setSubmitValidation,
 }) {
     /* ----- Global Variables ---------------------------------------- */
     var game;
@@ -243,6 +244,7 @@ export function geronimo({
                 console.log('new Game');
                 this.init(0);
                 this.forceResume();
+                setSubmitValidation(null);
             }
         };
 
@@ -351,7 +353,7 @@ export function geronimo({
             } else {
                 scoreIsValid = true;
             }
-            console.log('validate score. score: ' + this.score.score + ', level: ' + this.level, scoreIsValid);
+            console.log('validate score. score: ' + this.score.score + ', level: ' + this.level);
             return scoreIsValid;
         };
 

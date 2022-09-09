@@ -9,9 +9,17 @@ const HighScore = (props) => {
                 <h1>Highscore</h1>
                 {highScoreList.length > 0 && (
                     <ol id="highscore-list">
-                        {highScoreList.map((item) => {
+                        {highScoreList.map((item, index) => {
                             return (
-                                <li>
+                                <li key={index}>
+                                    {item.account && (
+                                        <a
+                                            href={`https://ropsten.etherscan.io/address/${item.account}`}
+                                            target="_blank"
+                                        >
+                                            {item.account?.substr(0, 6)}...{item.account?.substr(-6)}
+                                        </a>
+                                    )}
                                     {item.name}
                                     <span id="score">{item.score}</span>
                                 </li>

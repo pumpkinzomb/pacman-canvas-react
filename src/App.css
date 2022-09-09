@@ -35,6 +35,16 @@ div {
     cursor: pointer;
     padding: 8px;
 }
+
+.button#connect-wallet {
+    margin-left: auto;
+}
+
+.account-section {
+    display: flex;
+    padding-bottom: 16px;
+}
+
 #menu-buttons .button {
     background: rgba(0, 0, 0, 0.4);
 }
