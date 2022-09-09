@@ -18,7 +18,7 @@
         "node": "16.x"
     },
     "scripts": {
-        "heroku-prebuild": "npm install --only=dev",
+        "heroku-prebuild": "yarn install",
         "server": "nodemon server",
         "start": "yarn build && node server",
         "start:dev": "craco start",
