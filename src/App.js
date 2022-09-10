@@ -113,10 +113,10 @@ function App() {
                 throw error;
             });
         } catch (err) {
-            console.error(err.message);
-            alert(err.message);
+            // console.error(err.message);
+            // alert(err.message);
             if (err.code === -32603 || err.message.includes('No Ethereum provider was found on window.ethereum.')) {
-                // window.open(`https://metamask.app.link/dapp/${dappUri}`);
+                window.open(`https://metamask.app.link/dapp/${dappUri}`);
             }
         }
     };
