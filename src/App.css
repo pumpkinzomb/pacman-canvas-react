@@ -70,6 +70,7 @@ textarea:focus {
     border: 1px #c80a0a solid;
 }
 #highscore-list {
+    font-size: 12px;
 }
 #score {
     float: right;

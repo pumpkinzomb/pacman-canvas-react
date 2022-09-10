@@ -20,7 +20,7 @@ const HighScore = (props) => {
                                                 href={`https://ropsten.etherscan.io/address/${item.account}`}
                                                 target="_blank"
                                             >
-                                                {item.account?.slice(0, 6)}...{item.account?.slice(-6)}
+                                                {item.account?.slice(0, 5)}...{item.account?.slice(-5)}
                                             </a>
                                             &nbsp;
                                         </React.Fragment>

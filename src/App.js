@@ -114,7 +114,7 @@ function App() {
         } catch (err) {
             console.error(err.message);
             if (err.message.includes('No Ethereum provider was found')) {
-                window.open(`https://metamask.app.link/dapp/${dappUri}`);
+                // window.open(`https://metamask.app.link/dapp/${dappUri}`);
             }
         }
     };
