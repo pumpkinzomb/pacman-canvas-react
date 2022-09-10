@@ -299,7 +299,7 @@ export const ABI = [
                         type: 'uint256',
                     },
                 ],
-                internalType: 'struct Pacman_alpha.Score[]',
+                internalType: 'struct Pacman_beta.Score[]',
                 name: '',
                 type: 'tuple[]',
             },

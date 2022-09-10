@@ -15,7 +15,7 @@ import { findAllInRenderedTree } from 'react-dom/test-utils';
 const injected = new InjectedConnector();
 const web3 = new Web3(Web3.givenProvider || 'https://ropsten.infura.io/v3/a07cd96ad0bb435f9e750c8faa672052');
 const dappUri = 'pacman-web3.herokuapp.com';
-const CA = '0x297E7a4d49b97D2D9121810214b916a551E34B09';
+const CA = '0x4BCa824Da8A04b9230eD2c96DDAdB1eAf9299b90';
 const PacmanContract = new web3.eth.Contract(ABI, CA);
 
 function App() {

@@ -29,7 +29,6 @@ module.exports = {
                     buffer: require.resolve('buffer'),
                     asset: require.resolve('assert'),
                     os: require.resolve('os-browserify'),
-                    stream: require.resolve('stream-browserify'),
                     http: require.resolve('stream-http'),
                     https: require.resolve('https-browserify'),
                     crypto: require.resolve('crypto-browserify'),
