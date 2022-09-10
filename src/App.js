@@ -10,6 +10,7 @@ import Instructions from './components/Instructions';
 import Info from './components/Info';
 import Description from './components/Description';
 import { ABI } from './contracts/Pacman';
+import { findAllInRenderedTree } from 'react-dom/test-utils';
 
 const injected = new InjectedConnector();
 const web3 = new Web3(Web3.givenProvider || 'https://ropsten.infura.io/v3/a07cd96ad0bb435f9e750c8faa672052');
@@ -113,7 +114,8 @@ function App() {
             });
         } catch (err) {
             console.error(err.message);
-            if (err.message.includes('No Ethereum provider was found')) {
+            alert(err.message);
+            if (err.code === -32603 || err.message.includes('No Ethereum provider was found on window.ethereum.')) {
                 // window.open(`https://metamask.app.link/dapp/${dappUri}`);
             }
         }
